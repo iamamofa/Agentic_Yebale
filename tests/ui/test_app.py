@@ -139,6 +139,24 @@ class StreamlitFlowTests(unittest.TestCase):
         selected = next(m for m in app.metric if m.label == 'Selected source')
         self.assertEqual(selected.value, 'W')
 
+    def test_interactive_lesson_separates_coverage_from_skill(self):
+        app = self.app()
+        app.segmented_control(key='home_section').set_value('Try it yourself').run()
+        app.slider(key='lesson_absence').set_value(40).run()
+        app.slider(key='lesson_skill').set_value(100).run()
+        values = {m.label: m.value for m in app.metric}
+        self.assertEqual(values['Found answers'], '60 / 100')
+        self.assertEqual(values['Absent from source'], '40 / 100')
+        app.slider(key='lesson_skill').set_value(0).run()
+        values = {m.label: m.value for m in app.metric}
+        self.assertEqual(values['Present but missed'], '60 / 100')
+        self.assertEqual(values['Absent from source'], '40 / 100')
+        self.assertFalse(app.exception)
+        app.segmented_control(key='home_section').set_value('How to use the app').run()
+        self.button(app, 'Open Context studio').click().run()
+        self.assertEqual(app.radio(key='workspace').value, 'Context studio')
+        self.assertFalse(app.exception)
+
     def test_router_skips_all_sources_when_cost_exceeds_value(self):
         app = self.app('Routing simulator')
         app.selectbox(key='route_scenario').set_value('Missing everywhere').run()
@@ -161,7 +179,10 @@ class StreamlitFlowTests(unittest.TestCase):
         self.assertFalse(app.exception)
         self.assertEqual(app.session_state['context_result']['selected_model_id'], 'demo-medium')
         self.assertTrue(app.session_state['context_result']['candidates'][0]['context']['conflicts'])
-        app.text_area[0].set_value('A revised question?').run()
+        app.radio(key='context_input_mode').set_value('Paste').run()
+        request = json.loads(services.sample_text('context'))
+        request['question'] = 'A revised question?'
+        app.text_area(key='context_input_text').set_value(json.dumps(request)).run()
         self.assertTrue(any('Inputs changed' in info.value for info in app.info))
 
     def test_invalid_pasted_context_displays_error_without_crashing(self):
@@ -183,7 +204,7 @@ class StreamlitFlowTests(unittest.TestCase):
 
     def test_run_experiment_export_then_predict_with_latest_system(self):
         app = self.app('Experiments')
-        app.checkbox[0].check().run()
+        app.checkbox[0].check()
         self.button(app, 'Run experiment').click().run()
         self.assertFalse(app.exception)
         self.assertFalse(app.error)
@@ -209,8 +230,8 @@ class StreamlitFlowTests(unittest.TestCase):
 
     def test_experiment_budget_failure_does_not_keep_a_fitted_system(self):
         app = self.app('Experiments')
-        app.checkbox[0].check().run()
-        next(widget for widget in app.number_input if widget.label == 'Total call budget').set_value(100).run()
+        app.checkbox[0].check()
+        next(widget for widget in app.number_input if widget.label == 'Total call budget').set_value(100)
         self.button(app, 'Run experiment').click().run()
         self.assertFalse(app.exception)
         self.assertTrue(any('planned calls' in error.value for error in app.error))

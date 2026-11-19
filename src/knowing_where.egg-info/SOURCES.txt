@@ -31,10 +31,17 @@ src/knowing_where/experiments/pipeline.py
 src/knowing_where/experiments/runner.py
 src/knowing_where/experiments/system.py
 src/knowing_where/experiments/training.py
+src/knowing_where/providers/__init__.py
+src/knowing_where/providers/huggingface.py
 src/knowing_where/routing/__init__.py
 src/knowing_where/routing/router.py
 src/knowing_where/ui/__init__.py
 src/knowing_where/ui/app.py
+src/knowing_where/ui/flow.py
+src/knowing_where/ui/learning.py
+src/knowing_where/ui/live.py
 src/knowing_where/ui/services.py
+src/knowing_where/ui/sharing.py
 src/knowing_where/ui/styles.py
 src/knowing_where/ui/uncertainty.py
+tests/test_launcher.py

@@ -1,29 +1,6 @@
 """Shared visual system for the evidence workbench."""
 
 STYLE = '''<style>
-:root { --ink:#132d3e; --teal:#168a80; --gold:#d69a42; }
-.stApp {background:radial-gradient(ellipse at 85% 0%,#e8f5ef 0%,transparent 42%),#f6f8fb;}
-.block-container {max-width:1320px;padding-top:2.6rem;padding-bottom:3rem;}
-h1,h2,h3 {font-family:'Avenir Next','Segoe UI',sans-serif;color:var(--ink);letter-spacing:-.035em;}
-h1 {font-size:2.9rem!important;line-height:1.12!important;font-weight:800!important;max-width:900px;}
-p,label,button {font-family:'Avenir Next','Segoe UI',sans-serif;}
-[data-testid="stCaptionContainer"] {color:#697c8e;}
-[data-testid="stSidebar"] {background:linear-gradient(165deg,#102f40 0%,#153d4c 60%,#0c2738 100%);border-right:0;}
-[data-testid="stSidebar"] h3,[data-testid="stSidebar"] p,[data-testid="stSidebar"] label {color:#eef8f7!important;}
-[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p {color:#a9c6d0!important;font-size:.77rem;letter-spacing:.03em;}
-[data-testid="stSidebar"] hr {border-color:#42616c;}
-[data-testid="stSidebar"] [data-testid="stRadio"] label {padding:.5rem .7rem;border-radius:9px;margin-bottom:3px;}
-[data-testid="stSidebar"] [data-testid="stRadio"] label:hover {background:#244e5d;}
-[data-testid="stSidebar"] button {background:#244e5d;border:1px solid #51707b;color:#fff;}
-[data-testid="stMetric"] {background:#fff;border:1px solid #e4eaef;border-radius:15px;padding:18px 20px;box-shadow:0 3px 12px #16384c04;}
-[data-testid="stMetricValue"] {font-family:'Avenir Next','Segoe UI',sans-serif;font-weight:750;color:#163e4c;}
-[data-testid="stForm"] {background:#fff;border:1px solid #e2e9ed;border-radius:16px;padding:22px;}
-[data-testid="stExpander"] {background:#ffffffab;border:1px solid #e2e9ed;border-radius:12px;}
-[data-testid="stAlert"] {border-radius:12px;}
-[data-testid="stTabs"] [role="tablist"] {gap:18px;border-bottom:1px solid #dfe8ed;}
-[data-testid="stTabs"] [role="tab"] {font-weight:600;}
-div.stButton>button[kind="primary"] {border-radius:9px;background:#137a70;border:0;padding:.65rem 1.1rem;box-shadow:0 4px 10px #137a7018;}
-div.stDownloadButton>button {border-radius:9px;}
 .uncertainty-orbit {width:188px;height:188px;border-radius:50%;margin:12px auto 18px;padding:13px;
   background:conic-gradient(from -90deg,#168a80 0deg,#168a80 var(--orbit-angle),#e3ecee var(--orbit-angle),#e3ecee 360deg);
   box-shadow:0 0 0 9px #fff,0 8px 32px #1437480c;}
@@ -36,7 +13,7 @@ div.stDownloadButton>button {border-radius:9px;}
 .decision-strip strong {flex:1;color:#153e4c;font-size:.95rem;}
 .source-chips {display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 22px;}
 .source-chips span {border:1px solid #476773;background:#234a58;color:#ddf1ee;border-radius:20px;padding:4px 10px;font-size:.72rem;}
-@media(max-width:760px){h1{font-size:2.1rem!important}.block-container{padding-top:1.5rem}.decision-strip{flex-wrap:wrap;gap:8px}.uncertainty-orbit{width:160px;height:160px}}
+@media(max-width:760px){.decision-strip{flex-wrap:wrap;gap:8px}.uncertainty-orbit{width:160px;height:160px}}
 .decision-flow {list-style:none!important;margin:8px 0 28px!important;padding:0!important;
   display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:26px;}
 .decision-flow .flow-stage {position:relative;margin:0!important;padding:19px 16px!important;

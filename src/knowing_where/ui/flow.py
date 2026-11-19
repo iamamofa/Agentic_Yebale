@@ -36,9 +36,8 @@ def decision_flow_html(source_first=False):
         cards.append(
             f'<li class="flow-stage{" flow-stage-final" if number == "05" else ""}">'
             f'<div class="flow-card-top"><span class="flow-icon" aria-hidden="true">'
-            f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" '
-            f'stroke-linecap="round" stroke-linejoin="round">{icon}</svg></span>'
-            f'<span class="flow-step">{number}</span></div>'
+            f'{number}</span>'
+            f'<span class="flow-step">STEP</span></div>'
             f'<h4>{escape(title)}</h4><p>{escape(description)}</p>{outcomes}</li>'
         )
     return ('<ol class="decision-flow" aria-label="Five stages from context to a decision">'

@@ -68,13 +68,13 @@ def _comparison(report, key):
              'mean_normalized_entropy': 'Mean answer dispersion',
              'mean_top_two_margin': 'Mean top-two gap'}
     names = {name: label for name, label in names.items() if name in frame}
-    selected = st.selectbox('Comparison metric', tuple(names), format_func=names.get, key=f'{key}_metric')
+    selected = st.selectbox('Comparison metric', tuple(names), format_func=names.__getitem__, key=f'{key}_metric') or next(iter(names))
     chart = alt.Chart(frame.reset_index()).mark_bar(color='#168a80', size=24, cornerRadiusEnd=5).encode(
         y=alt.Y('Method:N', sort='-x', title=None),
         x=alt.X(f'{selected}:Q', scale=alt.Scale(domain=[0, 1]), axis=alt.Axis(format='.0%'), title=names[selected]),
         tooltip=['Method:N', alt.Tooltip(f'{selected}:Q', format='.1%', title=names[selected])]
     ).properties(height=240).configure_view(stroke=None).configure_axis(gridColor='#e5ecef')
-    st.altair_chart(chart, use_container_width=True)
+    st.altair_chart(chart, width='stretch')
     columns = ['point_accuracy', 'answer_rate', 'selective_accuracy', 'mapped_set_coverage',
                'canonical_answer_set_coverage', 'mean_set_size']
     display = frame[columns].rename(columns={**names, 'selective_accuracy': 'Selective accuracy',
@@ -220,7 +220,7 @@ def _experiment_results(report):
     _comparison(report, 'experiment')
     compare, inspect, diagnostics, export = st.tabs(('Group results', 'Evidence inspector', 'Run diagnostics', 'Export'))
     with compare:
-        method = st.selectbox('Group comparison method', tuple(report['comparisons']), format_func=LABELS.get)
+        method = st.selectbox('Group comparison method', tuple(report['comparisons']), format_func=LABELS.__getitem__)
         group_frame = pd.DataFrame(report['comparisons'][method]['groups']).T
         st.dataframe(group_frame[['count', 'point_accuracy', 'answer_rate', 'selective_accuracy',
                                    'mapped_set_coverage', 'canonical_answer_set_coverage', 'mean_set_size']],
@@ -346,7 +346,7 @@ def _predict():
     st.caption(f"{len(result['predictions'])} questions · {result['generation']['attempted_calls']} generator attempts")
     id_ = st.selectbox('Inspect question', [r['id'] for r in result['predictions']])
     record = next(r for r in result['predictions'] if r['id'] == id_)
-    method = st.selectbox('Scoring method', tuple(record['methods']), format_func=LABELS.get)
+    method = st.selectbox('Scoring method', tuple(record['methods']), format_func=LABELS.__getitem__)
     question = st.session_state.get('prediction_questions', {}).get(id_)
     if question:
         st.text(question)
@@ -366,12 +366,13 @@ def _predict():
 
 
 def main():
-    st.set_page_config(page_title='Knowing Where · Evidence Workbench', page_icon='◈', layout='wide')
-    st.markdown(STYLE, unsafe_allow_html=True)
+    st.set_page_config(page_title='Knowing Where · Evidence Workbench', page_icon=':material/explore:', layout='wide')
+    st.html(STYLE)
     with st.sidebar:
-        st.markdown('### ◈ Knowing Where')
-        st.caption('EVIDENCE & UNCERTAINTY · LEARN / EXPLORE / TEST')
-        page = st.radio('Workspace', PAGES, label_visibility='collapsed', key='workspace')
+        st.markdown('### :material/explore: Knowing Where')
+        st.caption('Find the source. Follow the evidence.')
+        st.caption('LEARN → SIMULATE → EXPERIMENT')
+        page = st.radio('Workspace', PAGES, label_visibility='collapsed', key='workspace') or 'Start here'
         st.divider()
         st.markdown('<div class="source-chips"><span>P · Parameters</span><span>W · Web / user</span>'
                     '<span>K · Knowledge</span><span>M · Memory</span></div>', unsafe_allow_html=True)

@@ -60,68 +60,150 @@ def _go(page):
 
 
 def _link(label, page, key):
-    st.button(label, key=key, on_click=_go, args=(page,), use_container_width=True)
+    st.button(label, key=key, on_click=_go, args=(page,), width='stretch')
 
 
 def start_here():
-    st.caption('START HERE · A FIVE-MINUTE TOUR')
+    st.caption('KNOWING WHERE / THE EVIDENCE COMPASS')
     st.title('A better answer starts with knowing where to look.')
-    st.write('Imagine asking a librarian a question. A better librarian can find a hidden fact, '
-             'but cannot find a fact in a book that never contained it. Our system measures those '
-             'two problems separately, then uses that distinction to guide a decision.')
-    st.info('The guided examples and simulations need no API key. To ask a real hosted model, '
-            'open Live models and connect a Hugging Face token.')
-    _link('Open Live models', 'Live models', 'tour_live')
-    a, b = st.columns(2)
-    with a:
-        st.subheader('Is the answer there?')
-        st.write('**Ghost mass (g)** estimates how likely the answer is to be absent from a source. '
-                 'Lower is better. A failed search alone cannot establish absence.')
-    with b:
-        st.subheader('Can the agent find it?')
-        st.write('**Reliability (r)** estimates how often the agent succeeds **when the answer is present**. '
-                 'Higher is better. It is different from overall accuracy.')
-    st.markdown('**Example:** If 20 of 100 questions have no answer in a source, and the agent finds '
-                '60 of the remaining 80, then g = 20% and r = 75%. It succeeds on 60% of all questions.')
-    st.subheader('One question. Four places to look.')
-    cols = st.columns(4)
-    for col, (source, name), description in zip(cols, SOURCES.items(), (
-        'What the model learned during training. May be out of date.',
-        'Retrieved pages. Can contain conflicting or incomplete evidence.',
-        'Documents or structured records. Entity lookup and computation may be needed.',
-        'Previous interactions. Past mistakes may be repeated.')):
-        with col.container(border=True):
-            st.markdown(f'### {source} · {name}')
-            st.write(description)
-    st.subheader('See the proposed source-first flow')
-    st.markdown(decision_flow_html(source_first=True), unsafe_allow_html=True)
-    st.caption('Source-first routing is an interactive policy prototype in Routing simulator. '
-               'Experiments and Predict retain the existing four-source comparison pipeline.')
-    st.subheader('Use the app, step by step')
+    st.write('Ask a question. Choose the right source. Check its evidence. '
+             'Answer when supported, or explain why more information is needed.')
+    with st.container(horizontal=True):
+        st.badge('Interactive lessons · no API key', icon=':material/touch_app:', color='green')
+        st.badge('Source-first routing prototype', icon=':material/route:', color='blue')
+    primary, secondary, third = st.columns(3)
+    with primary:
+        _link('Open Routing simulator', 'Routing simulator', 'home_simulator')
+    with secondary:
+        _link('Explore the algorithms', 'Algorithm explorer', 'home_algorithms')
+    with third:
+        _link('Open Live models', 'Live models', 'tour_live')
+    st.divider()
+    section = st.segmented_control('Explore at your own pace',
+        ['The idea', 'Try it yourself', 'How to use the app', 'Research progress'],
+        default='The idea', key='home_section')
+    if section == 'Try it yourself':
+        _coverage_lesson()
+    elif section == 'How to use the app':
+        _usage_guide()
+    elif section == 'Research progress':
+        _progress_cards()
+    else:
+        st.subheader('Two questions before every answer')
+        a, b = st.columns(2)
+        with a.container(border=True):
+            st.markdown('### :material/library_books: Is the answer there?')
+            st.write('A book cannot tell you a fact it never contained. **Ghost mass (g)** '
+                     'estimates the chance that a source lacks the answer. Lower is better.')
+            st.caption('This is about the information in the source.')
+        with b.container(border=True):
+            st.markdown('### :material/search: Can the agent find it?')
+            st.write('Even the right book needs a good search. **Reliability (r)** measures '
+                     'success when the answer is present. Higher is better.')
+            st.caption('This is about the skill of the retriever and reader.')
+        st.subheader('The proposed journey, from question to decision')
+        st.html(decision_flow_html(source_first=True))
+        st.info('Choose a source using query-side KAP signals first; then retrieve and assess '
+                'confidence on that source. The simulator demonstrates this proposed policy. '
+                'The saved experiment engine still compares all four sources.')
+        with st.expander('What are the four sources?'):
+            st.table(pd.DataFrame([
+                {'Source': 'P · Model knowledge', 'What it contains': 'Facts learned during training', 'Example': 'A general definition'},
+                {'Source': 'W · Web', 'What it contains': 'Retrieved public pages', 'Example': 'A recent announcement'},
+                {'Source': 'K · Knowledge base', 'What it contains': 'Documents and structured records', 'Example': 'A company travel policy'},
+                {'Source': 'M · Memory', 'What it contains': 'Earlier interactions', 'Example': 'Your preferred presentation style'},
+            ]))
+        st.caption('K in P/W/K/M names a source. KAP names the query-side feature framework; '
+                   'its source estimates are used before answer generation.')
+
+
+def _coverage_lesson():
+    st.subheader('See why a better search cannot fix a missing fact')
+    st.write('Move the controls. Each dot represents one of 100 hypothetical questions. '
+             'Hold absence fixed and improve retrieval to see exactly what changes.')
+    controls, visual = st.columns([1, 2], gap='large')
+    with controls:
+        ghost = st.slider('Questions with no answer in the source', 0, 100, 33, key='lesson_absence')
+        reliability = st.slider('Agent success when the answer exists', 0, 100, 60, key='lesson_skill')
+        st.caption('Teaching assumptions, not a benchmark run. Outcomes are expectations; '
+                   'dots round those expectations to whole questions.')
+    absent = ghost
+    found = round((100 - absent) * reliability / 100)
+    missed = 100 - absent - found
+    outcomes = ['Found'] * found + ['Present, missed'] * missed + ['Absent'] * absent
+    dots = pd.DataFrame([{'Column': i % 10, 'Row': i // 10, 'Outcome': outcome,
+                          'Question': i + 1} for i, outcome in enumerate(outcomes)])
+    with visual:
+        st.altair_chart(alt.Chart(dots).mark_circle(size=210).encode(
+            x=alt.X('Column:O', axis=None), y=alt.Y('Row:O', axis=None),
+            color=alt.Color('Outcome:N', sort=['Found', 'Present, missed', 'Absent'],
+                scale=alt.Scale(domain=['Found', 'Present, missed', 'Absent'], range=COLORS),
+                legend=alt.Legend(orient='bottom', title=None)),
+            tooltip=['Question:Q', 'Outcome:N']).properties(height=255).configure_view(stroke=None),
+            width='stretch', alt='100 questions grouped into found answers, missed answers, and absent answers')
+    cols = st.columns(3)
+    for col, label, value in zip(cols, ['Found answers', 'Present but missed', 'Absent from source'], [found, missed, absent]):
+        col.metric(label, f'{value} / 100', border=True)
+    st.write(f'**Read this result:** the agent finds about **{found}** answers. '
+             f'Better retrieval can recover the **{missed}** missed answers. '
+             f'The **{absent}** absent answers need more information or another source.')
+    with st.expander('Show the model behind the dots'):
+        st.latex(r'P(\mathrm{found})=(1-g)r')
+        st.write('Found = present × retrieval success. Present but missed = (1−g)(1−r). Absent = g.')
+        st.caption('A failed lookup alone cannot tell us whether the answer was absent. '
+                   'Real measurement needs separately audited presence labels.')
+
+
+def _usage_guide():
+    st.subheader('Your first successful run')
+    st.write('Start with the supplied examples. No data preparation or API key is needed for this tour.')
     steps = [
-        ('1. See why routing matters', 'Routing simulator',
-         'Choose a scenario, adjust absence and retrieval skill, then step through the route and selected-source confidence.'),
-        ('2. Prepare the evidence', 'Context studio',
-         'Keep Sample selected. Press Compile context. Inspect the selected model, retained evidence, conflicts, and rejected models.'),
-        ('3. Reproduce an experiment', 'Experiments',
-         'Keep both samples. Select the independence approximation after reading it, then press Run experiment. Compare answer rate and accuracy.'),
-        ('4. Understand uncertainty', 'Uncertainty lab',
-         'Choose Controlled examples. Compare Each source is split with Sources disagree: the same overall uncertainty can have different causes.'),
-        ('5. Inspect a prediction', 'Predict',
-         'Choose Latest experiment or Bundled system. Keep sample queries and press Run predictions. Read the answer set and abstention reason.'),
+        ('Understand a route', 'Routing simulator', 'Choose a scenario. Move “Walk through the decision” from 1 to 5. '
+         'At step 5, adjust the threshold to see the teaching gate allow a candidate or abstain.'),
+        ('Prepare evidence', 'Context studio', 'Keep Sample selected and press Compile context. '
+         'Inspect the selected model, retained passages, and conflicting claims.'),
+        ('Compare algorithms', 'Experiments', 'Keep the samples. Read and select the independence approximation, '
+         'then press Run experiment. Compare answer rate and accuracy together.'),
+        ('Inspect an answer', 'Predict', 'Select Latest experiment, keep the sample queries and press Run predictions. '
+         'Read the answer set and the explanation for answering or abstaining.'),
+        ('Try a hosted reader', 'Live models', 'Connect a Hugging Face token, select a model and source, '
+         'supply evidence, then press Generate live answer. This step uses your provider account.'),
     ]
-    for i, (title, page, instruction) in enumerate(steps):
+    for i, (title, page, instruction) in enumerate(steps, 1):
         with st.container(border=True):
-            text, action = st.columns([4, 1])
-            text.markdown(f'**{title}**')
+            text, action = st.columns([3, 1], vertical_alignment='bottom')
+            text.markdown(f'**{i:02d} / {title}**')
             text.write(instruction)
             with action:
-                _link(f'Open {page}', page, f'tour_{i}')
-    with st.expander('Read a decision without the mathematics', expanded=True):
-        st.markdown('**Answer:** one candidate remains after calibration.\n\n'
-                    '**Abstain:** the system cannot narrow the answer down safely; inspect the evidence or add a source.\n\n'
-                    '**Ø (outside):** the answer may be outside the supplied candidates. It does not prove the fact is absent from the world.\n\n'
-                    '**Agreement:** repeated answers are consistent. That alone does not make them correct.')
+                _link(f'Open {page}', page, f'guide_{i}')
+    with st.expander('What does the decision mean?'):
+        st.write('**Answer:** a single supported candidate remains under the decision policy. '
+                 '**Abstain:** evidence is insufficient or ambiguous. '
+                 '**Ø:** the answer may be outside the supplied candidates. '
+                 '**Agreement:** repeated answers match; this does not establish correctness.')
+
+
+def _progress_cards():
+    st.subheader('What your team has reported')
+    st.caption('Source: supplied team chat, 18–19 November 2026. These results are reported, not reproduced here.')
+    a, b, c = st.columns(3)
+    a.metric('Web questions', '2,706', border=True)
+    b.metric('Knowledge-base questions', '1,153', border=True)
+    c.metric('Reported reliability gain', '3×', border=True)
+    left, right = st.columns(2)
+    with left.container(border=True):
+        st.markdown('### :material/check_circle: Evidence so far')
+        st.write('The chat reports web ghost mass staying near 0.33 while reliability triples. '
+                 'That supports investigating the separation of source coverage and retrieval skill.')
+        st.write('Abstention moved reported CRAG scores from −0.70 to +0.008 on web, '
+                 'and from −0.55 to +0.048 on the knowledge base.')
+    with right.container(border=True):
+        st.markdown('### :material/science: Still being tested')
+        st.write('Answer fusion remains unresolved. Web H2 fails in the reported run. '
+                 'Knowledge-base entity lookup failures still need to be separated from genuine absence.')
+        st.write('The app can connect a hosted reader with a token. '
+                 'Source-first routing still needs held-out evaluation and fresh calibration.')
+    _link('Inspect research graphs', 'Research notebook', 'home_research')
 
 
 def simulator():
@@ -131,20 +213,22 @@ def simulator():
              'for that destination. Change the controls to see when a better retriever helps and when a different source is needed.')
     st.info('Illustrative inputs and expected outcomes, not fitted KAP predictions or CRAG measurements. '
             'This policy runs here; it is not connected to the saved four-source prediction engine.')
-    scenario = st.selectbox('Choose a question scenario', tuple(SCENARIOS), key='route_scenario')
+    scenario = st.selectbox('Choose a question scenario', tuple(SCENARIOS), key='route_scenario') or next(iter(SCENARIOS))
     question, values = SCENARIOS[scenario]
     st.markdown(f'**Example question:** {question}')
     st.caption('K is the knowledge-base source label. KAP signals are query-side features used to estimate source suitability; '
                'they are available before answer generation. Here the sliders stand in for those estimates.')
     estimates = {}
-    columns = st.columns(4)
-    for col, (source, name), (g, r) in zip(columns, SOURCES.items(), values):
-        with col.container(border=True):
-            st.markdown(f'**{source} · {name}**')
-            ghost = st.slider('Answer absent (g)', 0.0, 1.0, g, .01, key=f'{scenario}_{source}_g')
-            reliability = st.slider('Finds it when present (r)', 0.0, 1.0, r, .01, key=f'{scenario}_{source}_r')
-            estimates[source] = (ghost, reliability)
-    penalty = st.slider('How much should retrieval cost matter?', 0.0, 1.0, .20, .05, key='route_penalty')
+    with st.expander('Adjust source assumptions and retrieval cost'):
+        st.caption('Start with the scenario defaults. Open these controls to test your own assumptions.')
+        columns = st.columns(4)
+        for col, (source, name), (g, r) in zip(columns, SOURCES.items(), values):
+            with col.container(border=True):
+                st.markdown(f'**{source} · {name}**')
+                ghost = st.slider('Answer absent (g)', 0.0, 1.0, g, .01, key=f'{scenario}_{source}_g')
+                reliability = st.slider('Finds it when present (r)', 0.0, 1.0, r, .01, key=f'{scenario}_{source}_r')
+                estimates[source] = (ghost, reliability)
+        penalty = st.slider('How much should retrieval cost matter?', 0.0, 1.0, .20, .05, key='route_penalty')
     costs = {'P': .10, 'W': .80, 'K': .35, 'M': .15}
     selected, rows = route_illustration(estimates, costs, penalty)
     frame = pd.DataFrame(rows)
@@ -153,9 +237,10 @@ def simulator():
         x=alt.X('Utility:Q', title='Expected useful retrieval minus weighted cost'),
         color=alt.condition(alt.datum.Source == (selected or ''), alt.value('#168a80'), alt.value('#bbcbd2')),
         tooltip=['Source', alt.Tooltip('Useful retrieval:Q', format='.1%'), 'Cost units', 'Utility'])
-    st.altair_chart(chart.properties(height=190), use_container_width=True)
+    st.altair_chart(chart.properties(height=190), width='stretch')
     st.caption('Teaching costs: P 0.10 · W 0.80 · K 0.35 · M 0.15. These are dimensionless assumptions, not provider prices. '
                'The highest positive utility wins; otherwise retrieval is skipped.')
+    st.subheader('Follow one decision')
     stage = st.slider('Walk through the decision', 1, 5, 1, key='route_stage')
     descriptions = [
         ('Understand the question', 'Estimate source coverage and retrieval difficulty using question-side metadata. No answer paths have been requested.'),
@@ -164,6 +249,7 @@ def simulator():
         ('Check selected-source confidence', 'Inspect repeated answers and the source absence estimate together. Agreement alone is insufficient.'),
         ('Answer or abstain', 'The teaching gate below combines retrieval potential with a manually supplied agreement score. Production uses independently calibrated prediction sets.'),
     ]
+    st.progress(stage / 5, text=f'Step {stage} of 5')
     title, description = descriptions[stage - 1]
     st.subheader(f'{stage:02d} · {title}')
     st.write(description)
@@ -173,6 +259,8 @@ def simulator():
     cols[2].metric('Answer-path requests so far', '0 (illustration)')
     st.caption('Routing may still need cheap metadata probes. No live requests are made by this simulator; '
                'one source destination does not mean one model call.')
+    if not selected:
+        st.warning('Abstain: none of the sources has positive expected value under these assumptions.')
     if selected and stage >= 3:
         g, r = estimates[selected]
         st.subheader('What happens across 1,000 similar questions?')
@@ -183,7 +271,7 @@ def simulator():
             y=alt.Y('Outcome:N', sort=None, title=None),
             color=alt.Color('Outcome:N', scale=alt.Scale(range=COLORS), legend=None),
             tooltip=['Outcome', alt.Tooltip('Expected questions:Q', format='.1f')]
-        ).properties(height=150), use_container_width=True)
+        ).properties(height=150), width='stretch')
         st.caption('Analytic expectation: found = (1−g)r; present but missed = (1−g)(1−r); absent = g. '
                    'Holding g fixed while raising r moves questions from missed to found, never from absent to present.')
         if stage >= 4:
@@ -213,7 +301,7 @@ def simulator():
         y=alt.Y('Useful retrieval:Q', scale=alt.Scale(domain=[0, 1]), axis=alt.Axis(format='.0%')),
         color=alt.Color('Absence assumption:N', scale=alt.Scale(range=COLORS)),
         tooltip=['Absence assumption', alt.Tooltip('Reliability:Q', format='.0%'),
-                 alt.Tooltip('Useful retrieval:Q', format='.1%')]).properties(height=260), use_container_width=True)
+                 alt.Tooltip('Useful retrieval:Q', format='.1%')]).properties(height=260), width='stretch')
     st.caption('Even perfect retrieval cannot recover information missing from the selected corpus. '
                'For computed answers, first check whether the source contains the records needed to derive the result.')
 
@@ -223,6 +311,14 @@ def algorithms():
     st.title('Open the black box.')
     st.write('Follow each component from its purpose to its mathematics. The labels below distinguish '
              'implemented library behavior, the routing prototype, and approaches described in the supplied report.')
+    st.table(pd.DataFrame([
+        {'Component': 'KAP estimate heads', 'Algorithm': 'Two logistic regressions per source', 'Purpose': 'Estimate absence and retrieval skill', 'Status': 'Implemented in library'},
+        {'Component': 'Source selector', 'Algorithm': 'Cost-adjusted expected retrieval', 'Purpose': 'Choose where to look first', 'Status': 'Interactive prototype'},
+        {'Component': 'Model selector', 'Algorithm': 'Constraint filtering + ranking', 'Purpose': 'Match capabilities and budget', 'Status': 'Implemented in library'},
+        {'Component': 'Semantic retriever', 'Algorithm': 'BM25 → embeddings → cross-encoder', 'Purpose': 'Find and rank evidence', 'Status': 'Described in supplied report'},
+        {'Component': 'Decision gate', 'Algorithm': 'Group-conditional split conformal', 'Purpose': 'Answer or abstain', 'Status': 'Implemented for saved pipeline'},
+    ]))
+    st.caption('Open a component below for its intuition, equations, and execution steps.')
     with st.expander('1 · Measure two different failure causes', expanded=True):
         st.write('With independently checked source-presence labels, count found answers, present-but-missed answers, '
                  'and absent answers. Fit source estimates using training data only.')
@@ -287,7 +383,7 @@ def research_snapshot():
     st.info('These values are transcribed from the user-provided chat and PROJECT_FEEDBACK.pdf. '
             'They were not reproduced by this app. The sources describe different snapshots and must not be pooled.')
     snapshot = st.radio('Evidence snapshot', ('Chat · 18–19 Nov 2026', 'Supplied PDF · progress report'),
-                        horizontal=True, key='research_snapshot')
+                        horizontal=True, key='research_snapshot') or 'Chat · 18–19 Nov 2026'
     if snapshot.startswith('Chat'):
         st.write('Chat reports 2,706 web questions and 1,153 knowledge-base questions; no LLM available at that stage.')
         data = pd.DataFrame([{'Source': 'Web', 'Stage': 'Before abstention', 'CRAG score': -.70},
@@ -297,7 +393,7 @@ def research_snapshot():
         st.altair_chart(alt.Chart(data).mark_bar().encode(
             x='Source:N', xOffset='Stage:N', y=alt.Y('CRAG score:Q', scale=alt.Scale(domain=[-1, 1])),
             color=alt.Color('Stage:N', scale=alt.Scale(range=['#7184b1', '#168a80'])),
-            tooltip=['Source', 'Stage', 'CRAG score']).properties(height=290), use_container_width=True)
+            tooltip=['Source', 'Stage', 'CRAG score']).properties(height=290), width='stretch')
         st.caption('Chat-reported scores. Positive values are small; answer rates and uncertainty intervals are not supplied. '
                    'This graph does not establish broad answer usefulness.')
         st.write('The chat also reports combined-source ghost mass of 0.28 versus 0.35 and 0.65 individually. '
@@ -313,7 +409,7 @@ def research_snapshot():
             y=alt.Y('Rate:Q', axis=alt.Axis(format='.0%'), scale=alt.Scale(domain=[0, .4])),
             color=alt.Color('Quantity:N', scale=alt.Scale(range=['#d69a42', '#168a80'])),
             tooltip=['Agent', 'Quantity', alt.Tooltip('Rate:Q', format='.1%')]
-        ).properties(height=290), use_container_width=True)
+        ).properties(height=290), width='stretch')
         st.caption('PDF §3.1 values. This is an agent-change comparison, not proof of statistical independence. '
                    'The report says the fixed-agent corpus-expansion experiment remains in progress.')
         st.write('PDF §4.2 reports a weaker sampling signal for presence (AUROC 0.639 on 300 questions), '

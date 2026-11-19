@@ -18,8 +18,30 @@ python -m streamlit run streamlit_app.py
 Open the local URL printed by Streamlit, usually `http://localhost:8501`.
 The equivalent installation command is `python -m pip install -r requirements.txt`.
 UI dependencies are optional; installing the core package without `[ui]` keeps its
-standard-library-only runtime. The supported UI uses Streamlit 1.50+ and pandas;
-Python's package resolver selects compatible versions for your interpreter.
+standard-library-only runtime. The supported UI uses Python 3.11+, Streamlit 1.67+, and pandas.
+The core library continues to support Python 3.9+.
+
+## Guided introduction
+
+Start on **Start here** and choose a view:
+
+- **The idea** explains ghost mass and conditional retrieval reliability, then shows
+  the proposed question → source → retrieval → confidence → decision flow.
+- **Try it yourself** lets you adjust absence and retrieval skill across 100
+  hypothetical questions. The dots round analytic expectations to whole questions;
+  they are not measured CRAG outcomes.
+- **How to use the app** gives five actionable steps with buttons to each workspace.
+- **Research progress** summarizes the supplied 18–19 November 2026 chat and links
+  to the detailed graphs, keeping reported results distinct from local experiments.
+
+The routing simulator uses scenario defaults and keeps advanced assumptions in an
+expander. Its five-step walkthrough assesses only the selected source in the
+teaching model. It does not replace the saved four-source experiment engine or
+provide calibrated correctness probabilities. The algorithm explorer includes a
+component map with implementation status, equations, and execution steps.
+
+Appearance is configured in `.streamlit/config.toml`; custom CSS is limited to
+app-owned diagrams and illustrations.
 
 ## Workspaces
 
