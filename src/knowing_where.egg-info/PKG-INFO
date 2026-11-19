@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: knowing-where
+Version: 0.3.0
+Summary: Context preparation, uncertainty diagnostics, and source-fusion experiments
+Requires-Python: >=3.9
+Provides-Extra: ui
+Requires-Dist: streamlit<2,>=1.50; extra == "ui"
+Requires-Dist: pandas<3,>=1.5; extra == "ui"
+Requires-Dist: altair<6,>=5; extra == "ui"

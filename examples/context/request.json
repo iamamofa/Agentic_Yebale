@@ -1,0 +1,134 @@
+{
+  "question": "Design a coding agent that summarizes P/W/K/M context and routes requests while preserving evidence conflicts, staying within cost and latency limits.",
+  "instructions": [
+    "Keep P, W, K, and M provenance separate. Repeated claims are not independent verification.",
+    "Distinguish measured results from assumptions. Abstain when evidence is insufficient."
+  ],
+  "required_document_ids": [
+    "architecture"
+  ],
+  "documents": [
+    {
+      "id": "architecture",
+      "source": "K",
+      "title": "Existing implementation contract",
+      "locator": "README.md",
+      "observed_at": "2026-11-18",
+      "text": "The project implements query-only KAP extraction and source fusion. Source identities are P parameters, W web or user turns, K verified knowledge, and M interaction memory. Model choice is a separate axis from source identity. No fitted capability or reliability coefficients are available."
+    },
+    {
+      "id": "memory-budget",
+      "source": "M",
+      "title": "Earlier planning note",
+      "text": "The coding agent latency target was 3000 ms. This note is interaction memory and may have been superseded.",
+      "claims": {
+        "latency_target_ms": "3000"
+      }
+    },
+    {
+      "id": "current-budget",
+      "source": "W",
+      "title": "Current user planning note",
+      "text": "The coding agent latency target is 1500 ms. The spending limit is 0.02 USD per request. Confirm the latency conflict before treating either target as settled.",
+      "claims": {
+        "latency_target_ms": "1500"
+      }
+    },
+    {
+      "id": "design-prior",
+      "source": "P",
+      "title": "Unverified design hypothesis",
+      "text": "Query-relevant excerpts may reduce coding context size. Capability routing should be evaluated against a fixed-model baseline. These hypotheses are not measured accuracy improvements."
+    },
+    {
+      "id": "unrelated",
+      "source": "M",
+      "title": "Unrelated memory",
+      "text": "The previous workshop had tea and coffee. Participants arrived in the morning."
+    }
+  ],
+  "models": [
+    {
+      "id": "demo-small",
+      "description": "Synthetic fast model for simple tasks",
+      "capabilities": {
+        "coding": 0.55,
+        "reasoning": 0.4
+      },
+      "context_capacity": 3200,
+      "output_reserve": 700,
+      "estimated_cost_usd": 0.001,
+      "estimated_latency_ms": 300,
+      "limitations": [
+        "Synthetic suitability scores; not benchmark results"
+      ],
+      "provenance": "synthetic_demo"
+    },
+    {
+      "id": "demo-medium",
+      "description": "Synthetic general purpose model",
+      "capabilities": {
+        "coding": 0.8,
+        "reasoning": 0.75
+      },
+      "context_capacity": 5900,
+      "output_reserve": 900,
+      "estimated_cost_usd": 0.008,
+      "estimated_latency_ms": 1200,
+      "limitations": [
+        "Synthetic suitability scores; not benchmark results"
+      ],
+      "provenance": "synthetic_demo"
+    },
+    {
+      "id": "demo-large",
+      "description": "Synthetic model for demanding reasoning",
+      "capabilities": {
+        "coding": 0.95,
+        "reasoning": 0.95
+      },
+      "context_capacity": 10000,
+      "output_reserve": 1500,
+      "estimated_cost_usd": 0.03,
+      "estimated_latency_ms": 4000,
+      "limitations": [
+        "Synthetic suitability scores; not benchmark results"
+      ],
+      "provenance": "synthetic_demo"
+    }
+  ],
+  "policy": {
+    "capability_weights": {
+      "coding": 0.6,
+      "reasoning": 0.4
+    },
+    "max_cost_usd": 0.02,
+    "max_latency_ms": 1500
+  },
+  "evaluation_spans": [
+    {
+      "document_id": "architecture",
+      "start": 173,
+      "end": 226,
+      "label": "source-model-separation"
+    },
+    {
+      "document_id": "memory-budget",
+      "start": 0,
+      "end": 44,
+      "label": "previous-latency"
+    },
+    {
+      "document_id": "current-budget",
+      "start": 0,
+      "end": 43,
+      "label": "current-latency"
+    },
+    {
+      "document_id": "current-budget",
+      "start": 44,
+      "end": 87,
+      "label": "cost-limit"
+    }
+  ]
+}

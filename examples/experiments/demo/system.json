@@ -1,0 +1,362 @@
+{
+  "schema_version": 1,
+  "kind": "knowing_where_fitted_system",
+  "configuration": {
+    "seed": 42,
+    "alpha": 0.1,
+    "paths": 10,
+    "joint_ghost": "independent",
+    "generation_backend": "ReplayGenerator",
+    "generation_backend_id": "knowing_where.experiments.generation.ReplayGenerator"
+  },
+  "models": [
+    {
+      "id": "synthetic-replay-model",
+      "description": "Synthetic profile for offline replay; no measured model quality.",
+      "capabilities": {
+        "reasoning": 0.8
+      },
+      "context_capacity": 16000,
+      "output_reserve": 2000,
+      "unit_name": "utf8_bytes",
+      "estimated_cost_usd": 0.001,
+      "estimated_latency_ms": 100,
+      "limitations": [],
+      "provenance": "synthetic_demo"
+    }
+  ],
+  "routing_policy": {
+    "capability_weights": {},
+    "required_capabilities": {},
+    "max_cost_usd": null,
+    "max_latency_ms": null,
+    "selection_mode": "quality",
+    "min_suitability": 0.0,
+    "min_query_term_coverage": 0.0
+  },
+  "predictor": {
+    "heads": {
+      "P": {
+        "reliability": {
+          "weights": {
+            "distance_mean": 0.0,
+            "distance_mean__missing": 0.0,
+            "distance_zero": 0.0,
+            "distance_zero__missing": 0.0,
+            "guardrail_exposure": 0.0,
+            "guardrail_exposure__missing": 0.0,
+            "inverse_perplexity": 0.0,
+            "inverse_perplexity__missing": 0.0,
+            "knowledge_coverage": 0.0,
+            "knowledge_coverage__missing": 0.0,
+            "memory_hit_rate": 0.0,
+            "memory_hit_rate__missing": 0.0,
+            "memory_success_rate": 0.0,
+            "memory_success_rate__missing": 0.0,
+            "popularity": -0.8222901949483523,
+            "popularity__missing": 0.0,
+            "scope_fit": 3.145442470487235,
+            "scope_fit__missing": 0.0,
+            "snippet_agreement": 0.0,
+            "snippet_agreement__missing": 0.0,
+            "web_hits": 0.0,
+            "web_hits__missing": 0.0,
+            "well_posedness": 0.0,
+            "well_posedness__missing": 0.0
+          },
+          "intercept": -0.5753935516153512
+        },
+        "ghost_mass": {
+          "weights": {
+            "distance_mean": 0.0,
+            "distance_mean__missing": 0.0,
+            "distance_zero": 0.0,
+            "distance_zero__missing": 0.0,
+            "guardrail_exposure": 0.0,
+            "guardrail_exposure__missing": 0.0,
+            "inverse_perplexity": 0.0,
+            "inverse_perplexity__missing": 0.0,
+            "knowledge_coverage": 0.0,
+            "knowledge_coverage__missing": 0.0,
+            "memory_hit_rate": 0.0,
+            "memory_hit_rate__missing": 0.0,
+            "memory_success_rate": 0.0,
+            "memory_success_rate__missing": 0.0,
+            "popularity": -1.99344191324932,
+            "popularity__missing": 0.0,
+            "scope_fit": -3.0090713375811964,
+            "scope_fit__missing": 0.0,
+            "snippet_agreement": 0.0,
+            "snippet_agreement__missing": 0.0,
+            "web_hits": 0.0,
+            "web_hits__missing": 0.0,
+            "well_posedness": 0.0,
+            "well_posedness__missing": 0.0
+          },
+          "intercept": 1.8931572749171381
+        }
+      },
+      "W": {
+        "reliability": {
+          "weights": {
+            "distance_mean": 0.0,
+            "distance_mean__missing": 0.0,
+            "distance_zero": 0.0,
+            "distance_zero__missing": 0.0,
+            "guardrail_exposure": 0.0,
+            "guardrail_exposure__missing": 0.0,
+            "inverse_perplexity": 0.0,
+            "inverse_perplexity__missing": 0.0,
+            "knowledge_coverage": 0.0,
+            "knowledge_coverage__missing": 0.0,
+            "memory_hit_rate": 0.0,
+            "memory_hit_rate__missing": 0.0,
+            "memory_success_rate": 0.0,
+            "memory_success_rate__missing": 0.0,
+            "popularity": 2.7439063039388976,
+            "popularity__missing": 0.0,
+            "scope_fit": 3.247962084016237,
+            "scope_fit__missing": 0.0,
+            "snippet_agreement": 0.0,
+            "snippet_agreement__missing": 0.0,
+            "web_hits": 0.0,
+            "web_hits__missing": 0.0,
+            "well_posedness": 0.0,
+            "well_posedness__missing": 0.0
+          },
+          "intercept": -0.37987387644990234
+        },
+        "ghost_mass": {
+          "weights": {
+            "distance_mean": 0.0,
+            "distance_mean__missing": 0.0,
+            "distance_zero": 0.0,
+            "distance_zero__missing": 0.0,
+            "guardrail_exposure": 0.0,
+            "guardrail_exposure__missing": 0.0,
+            "inverse_perplexity": 0.0,
+            "inverse_perplexity__missing": 0.0,
+            "knowledge_coverage": 0.0,
+            "knowledge_coverage__missing": 0.0,
+            "memory_hit_rate": 0.0,
+            "memory_hit_rate__missing": 0.0,
+            "memory_success_rate": 0.0,
+            "memory_success_rate__missing": 0.0,
+            "popularity": -0.6154095625296965,
+            "popularity__missing": 0.0,
+            "scope_fit": -0.9107961884016139,
+            "scope_fit__missing": 0.0,
+            "snippet_agreement": 0.0,
+            "snippet_agreement__missing": 0.0,
+            "web_hits": 0.0,
+            "web_hits__missing": 0.0,
+            "well_posedness": 0.0,
+            "well_posedness__missing": 0.0
+          },
+          "intercept": -0.04353244685514146
+        }
+      },
+      "K": {
+        "reliability": {
+          "weights": {
+            "distance_mean": 0.0,
+            "distance_mean__missing": 0.0,
+            "distance_zero": 0.0,
+            "distance_zero__missing": 0.0,
+            "guardrail_exposure": 0.0,
+            "guardrail_exposure__missing": 0.0,
+            "inverse_perplexity": 0.0,
+            "inverse_perplexity__missing": 0.0,
+            "knowledge_coverage": 0.0,
+            "knowledge_coverage__missing": 0.0,
+            "memory_hit_rate": 0.0,
+            "memory_hit_rate__missing": 0.0,
+            "memory_success_rate": 0.0,
+            "memory_success_rate__missing": 0.0,
+            "popularity": 0.0,
+            "popularity__missing": 0.0,
+            "scope_fit": 0.0,
+            "scope_fit__missing": 0.0,
+            "snippet_agreement": 0.0,
+            "snippet_agreement__missing": 0.0,
+            "web_hits": 0.0,
+            "web_hits__missing": 0.0,
+            "well_posedness": 0.0,
+            "well_posedness__missing": 0.0
+          },
+          "intercept": 3.2580965380214804
+        },
+        "ghost_mass": {
+          "weights": {
+            "distance_mean": 0.0,
+            "distance_mean__missing": 0.0,
+            "distance_zero": 0.0,
+            "distance_zero__missing": 0.0,
+            "guardrail_exposure": 0.0,
+            "guardrail_exposure__missing": 0.0,
+            "inverse_perplexity": 0.0,
+            "inverse_perplexity__missing": 0.0,
+            "knowledge_coverage": 0.0,
+            "knowledge_coverage__missing": 0.0,
+            "memory_hit_rate": 0.0,
+            "memory_hit_rate__missing": 0.0,
+            "memory_success_rate": 0.0,
+            "memory_success_rate__missing": 0.0,
+            "popularity": -1.3713913844034955,
+            "popularity__missing": 0.0,
+            "scope_fit": -0.9263236439713075,
+            "scope_fit__missing": 0.0,
+            "snippet_agreement": 0.0,
+            "snippet_agreement__missing": 0.0,
+            "web_hits": 0.0,
+            "web_hits__missing": 0.0,
+            "well_posedness": 0.0,
+            "well_posedness__missing": 0.0
+          },
+          "intercept": 0.5217888424753032
+        }
+      },
+      "M": {
+        "reliability": {
+          "weights": {
+            "distance_mean": 0.0,
+            "distance_mean__missing": 0.0,
+            "distance_zero": 0.0,
+            "distance_zero__missing": 0.0,
+            "guardrail_exposure": 0.0,
+            "guardrail_exposure__missing": 0.0,
+            "inverse_perplexity": 0.0,
+            "inverse_perplexity__missing": 0.0,
+            "knowledge_coverage": 0.0,
+            "knowledge_coverage__missing": 0.0,
+            "memory_hit_rate": 0.0,
+            "memory_hit_rate__missing": 0.0,
+            "memory_success_rate": 0.0,
+            "memory_success_rate__missing": 0.0,
+            "popularity": 1.204346577514283,
+            "popularity__missing": 0.0,
+            "scope_fit": 2.1282712507661627,
+            "scope_fit__missing": 0.0,
+            "snippet_agreement": 0.0,
+            "snippet_agreement__missing": 0.0,
+            "web_hits": 0.0,
+            "web_hits__missing": 0.0,
+            "well_posedness": 0.0,
+            "well_posedness__missing": 0.0
+          },
+          "intercept": -2.683847248459421
+        },
+        "ghost_mass": {
+          "weights": {
+            "distance_mean": 0.0,
+            "distance_mean__missing": 0.0,
+            "distance_zero": 0.0,
+            "distance_zero__missing": 0.0,
+            "guardrail_exposure": 0.0,
+            "guardrail_exposure__missing": 0.0,
+            "inverse_perplexity": 0.0,
+            "inverse_perplexity__missing": 0.0,
+            "knowledge_coverage": 0.0,
+            "knowledge_coverage__missing": 0.0,
+            "memory_hit_rate": 0.0,
+            "memory_hit_rate__missing": 0.0,
+            "memory_success_rate": 0.0,
+            "memory_success_rate__missing": 0.0,
+            "popularity": -1.8948511206570864,
+            "popularity__missing": 0.0,
+            "scope_fit": -1.8131055602956196,
+            "scope_fit__missing": 0.0,
+            "snippet_agreement": 0.0,
+            "snippet_agreement__missing": 0.0,
+            "web_hits": 0.0,
+            "web_hits__missing": 0.0,
+            "well_posedness": 0.0,
+            "well_posedness__missing": 0.0
+          },
+          "intercept": 1.0921422065435278
+        }
+      }
+    },
+    "missing_values": {
+      "distance_mean": 0.2,
+      "distance_zero": 0.8,
+      "guardrail_exposure": 0.0,
+      "inverse_perplexity": 0.0,
+      "knowledge_coverage": 0.0,
+      "memory_hit_rate": 0.0,
+      "memory_success_rate": 0.0,
+      "popularity": 0.48055555555555557,
+      "scope_fit": 0.47269457649906865,
+      "snippet_agreement": 0.0,
+      "web_hits": 0.0,
+      "well_posedness": 0.8999999999999999
+    }
+  },
+  "calibration": {
+    "bayesian": {
+      "lookup": {
+        "calibration_count": 14,
+        "threshold": 0.9825720076814488,
+        "full_frame": false
+      },
+      "reasoning": {
+        "calibration_count": 6,
+        "threshold": null,
+        "full_frame": true
+      }
+    },
+    "dempster_shafer": {
+      "lookup": {
+        "calibration_count": 14,
+        "threshold": 0.9991876893450807,
+        "full_frame": false
+      },
+      "reasoning": {
+        "calibration_count": 6,
+        "threshold": null,
+        "full_frame": true
+      }
+    },
+    "equal_sources": {
+      "lookup": {
+        "calibration_count": 14,
+        "threshold": 0.9,
+        "full_frame": false
+      },
+      "reasoning": {
+        "calibration_count": 6,
+        "threshold": null,
+        "full_frame": true
+      }
+    },
+    "majority": {
+      "lookup": {
+        "calibration_count": 14,
+        "threshold": 1.0,
+        "full_frame": false
+      },
+      "reasoning": {
+        "calibration_count": 6,
+        "threshold": null,
+        "full_frame": true
+      }
+    },
+    "parametric_only": {
+      "lookup": {
+        "calibration_count": 14,
+        "threshold": 1.0,
+        "full_frame": false
+      },
+      "reasoning": {
+        "calibration_count": 6,
+        "threshold": null,
+        "full_frame": true
+      }
+    }
+  },
+  "provenance": {
+    "training_dataset_sha256": "36b332770a3b3482f419e43cdf71bcebf3065350361a5485c19ae9ae9e4846e2",
+    "training_count": 40
+  },
+  "sha256": "0dba31cc91d68541fdea41d30512db41b49819d0e5f907c91ee1b7a50d39f70a"
+}

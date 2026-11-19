@@ -1,0 +1,14 @@
+[
+  {
+    "id": "synthetic-replay-model",
+    "description": "Synthetic profile for offline replay; no measured model quality.",
+    "capabilities": {
+      "reasoning": 0.8
+    },
+    "context_capacity": 16000,
+    "output_reserve": 2000,
+    "estimated_cost_usd": 0.001,
+    "estimated_latency_ms": 100,
+    "provenance": "synthetic_demo"
+  }
+]

@@ -1,0 +1,5 @@
+
+[ui]
+streamlit<2,>=1.50
+pandas<3,>=1.5
+altair<6,>=5
