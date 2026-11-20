@@ -282,3 +282,12 @@ use **start_app.command** for automatic public sharing.
 See [Cloudflare Quick Tunnels](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/)
 for service limitations. The launcher retains Streamlit's normal origin and XSRF
 protections; it does not disable them to enable tunneling.
+
+## Community Cloud compatibility
+
+Deploy `streamlit_app.py` from the `main` branch. The cloud installation uses
+`requirements.txt`, which installs the UI extra and Altair 6. Python 3.14 is
+supported by Altair 6; Altair 5.5 fails during import on that Python version with
+`TypeError: _TypedDictMeta.__new__() got an unexpected keyword argument 'closed'`.
+Do not restore the previous `altair<6` constraint. After a dependency update,
+Community Cloud rebuilds the app environment from the published branch.

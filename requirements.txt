@@ -1,2 +1,4 @@
 .[ui]
 watchdog
+# Altair 6 fixes the TypedDict import failure on Python 3.14.
+altair>=6,<7
