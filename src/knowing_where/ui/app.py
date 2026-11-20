@@ -12,11 +12,12 @@ from .styles import STYLE
 from .flow import decision_flow_html
 from .uncertainty import lab, uncertainty_panel
 from .learning import start_here, simulator, algorithms, research_snapshot
+from .guides import guide_hub
 from .live import live_models
 from .sharing import sharing_panel
 from ..routing import RoutingPolicy
 
-PAGES = ('Start here', 'Live models', 'Routing simulator', 'Algorithm explorer', 'Overview',
+PAGES = ('Start here', 'Guides & methods', 'Live models', 'Routing simulator', 'Algorithm explorer', 'Overview',
          'Context studio', 'Experiments', 'Uncertainty lab', 'Predict', 'Research notebook')
 LABELS = {'bayesian': 'Bayesian fusion', 'dempster_shafer': 'Dempster–Shafer',
           'equal_sources': 'Equal sources', 'majority': 'Source majority',
@@ -386,7 +387,7 @@ def main():
                         'hf_live_result', 'hf_live_signature'):
                 st.session_state.pop(key, None)
             st.rerun()
-    {'Start here': start_here, 'Live models': live_models,
+    {'Start here': start_here, 'Guides & methods': guide_hub, 'Live models': live_models,
      'Routing simulator': simulator, 'Algorithm explorer': algorithms,
      'Research notebook': research_snapshot, 'Overview': _overview, 'Context studio': _context,
      'Experiments': _experiments, 'Uncertainty lab': lab, 'Predict': _predict}[page]()

@@ -78,6 +78,12 @@ def start_here():
         _link('Explore the algorithms', 'Algorithm explorer', 'home_algorithms')
     with third:
         _link('Open Live models', 'Live models', 'tour_live')
+    with st.container(border=True):
+        welcome, action = st.columns([3, 1], vertical_alignment='center')
+        welcome.markdown('**:material/auto_stories: A little guidance, a clearer journey.**')
+        welcome.caption('New here? Follow five practical stops, explore the literature, and build your research plan.')
+        with action:
+            _link('Open the field guide', 'Guides & methods', 'home_guides')
     st.divider()
     section = st.segmented_control('Explore at your own pace',
         ['The idea', 'Try it yourself', 'How to use the app', 'Research progress'],

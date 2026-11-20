@@ -291,3 +291,28 @@ supported by Altair 6; Altair 5.5 fails during import on that Python version wit
 `TypeError: _TypedDictMeta.__new__() got an unexpected keyword argument 'closed'`.
 Do not restore the previous `altair<6` constraint. After a dependency update,
 Community Cloud rebuilds the app environment from the published branch.
+
+## Field guide: literature, methodology, and first steps
+
+Open **Guides & methods** from the sidebar or **Open the field guide** on the
+home page. The existing theme and workspace layout are preserved.
+
+- **First visit** provides five practical stops, links to real workspaces,
+  expected takeaways, a progress checklist, and a question about agreement.
+  Checklist progress survives workspace changes within the same session.
+- **Literature review** maps four primary readings to retrieval, answer
+  agreement, calibration, and evaluation. Each card separates the paper's core
+  idea from this app's interpretation and limitations. Filter by reading lens,
+  open the original paper, or download a blank evidence matrix. These are curated
+  foundations, not an exhaustive systematic review or an established novelty claim.
+- **Methodology** walks through six research checkpoints, with inputs, outputs,
+  checks, and direct workspace actions. It explains the bundled 40/20/40 split,
+  family isolation, train-only fitting, calibration, frozen evaluation, and the
+  difference between actual answer coverage and mapped coverage including Ø.
+- **Study planner** exports a Markdown brief containing the user's question,
+  selected sources, dataset notes, all six checkpoints, and the linked readings.
+  Notes survive guide and workspace changes during the session.
+
+A pocket glossary explains the main terms. These guides make no model calls.
+Progress is self-reported and is not inferred from experiment results. Downloads
+are the way to retain plans after a session ends.
