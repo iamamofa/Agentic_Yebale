@@ -1,4 +1,7 @@
-"""Launch with: python -m streamlit run streamlit_app.py."""
+"""Evidence workbench with guided onboarding, literature, and methodology.
+
+Launch with: python -m streamlit run streamlit_app.py.
+"""
 
 from pathlib import Path
 import sys
